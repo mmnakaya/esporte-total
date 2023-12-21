@@ -1,0 +1,12 @@
+ttps://www.prisma.io/blog/nestjs-prisma-rest-api-7D056s1BmOL0
+
+Para que o SQL apareça no Visual Studio Code
+ctll + shift + P 
+Depois escolher SQL Database.
+
+
+Para alterar o modelo de dados, ir no arquivo schema.prisma e realizar as alterações.
+Dpois executar o comando abaixo no Visual Studio Code.
+
+npx prisma migrate dev --name init
+
