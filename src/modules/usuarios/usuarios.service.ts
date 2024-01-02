@@ -19,7 +19,7 @@ export class UsuariosService {
                 throw new Error('usuario ja existe')
             }
 
-            const grupo = await this.prisma.usuario.create({data})
-            return grupo;  
+            const usuario = await this.prisma.usuario.create({data})
+            return usuario;  
         }
 }

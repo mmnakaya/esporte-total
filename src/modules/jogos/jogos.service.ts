@@ -8,9 +8,8 @@ export class JogosService {
     constructor(private prisma: PrismaService) {}
   
           async create(data: JogosDto)  {
-  
-              const grupo = await this.prisma.jogos.create({data})
-              return grupo;  
+              const jogo = await this.prisma.jogos.create({data})
+              return jogo;  
           }
   }
 

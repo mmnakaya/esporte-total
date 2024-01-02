@@ -10,7 +10,7 @@ import { JogosDto } from './jogos.dto';
 import {JogosService} from './jogos.service';
 
 
-@Controller('jogos')
+@Controller()
 export class JogosController {
 
 constructor(

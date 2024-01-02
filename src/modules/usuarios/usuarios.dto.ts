@@ -4,6 +4,6 @@ export type UsuariosDto = {
     cpf?: string,
     email: string,
     codigo_DDD: string,
-    numeroTelefone: number,
+    numero_Telefone: number,
     data_criacao: string,
 }
