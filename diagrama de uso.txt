@@ -1,0 +1,57 @@
+Primeira Tela do APP
+
+Quando o usuário entrar no APP:
+
+Na primeira vez que entra, pedir para criar o usuário.
+	Exibir campos abaixo pra preenchimento:
+	-nome_usuario
+   	-cpf
+    	-email
+   	-codigo_ddd
+    	-numero_telefone 
+
+	Chamar API criacao usuario
+
+Após criação do usuário, oferecer ao usuário, as seguinte opções:
+
+	1 - Criar Grupo Novo
+		Exibir campos abaixo pra preenchimento
+			-nome_grupo     
+  			-descricao_grupo 
+		Chamar API criação de Grupo
+		Chamar API criação GrupoUsuario  - preenher campo "eh_administrador" como true (o que irá indicar que o criador do grupo é o adm do mesmo) 
+
+	2 - Entrar em Grupo Existente
+		Exibir campo para pesquisa do Grupo. Exibir campo para preenchimento do grupo desejado (nome ou parte do nome).
+		Chamar API pesquisa de Grupos. Caso não encontre nenhum grupo, retornar "Grupo não encontrado".
+		
+		Após usuário selecionar o grupo desejado.
+		Chamar a API criação GrupoUsuario
+		Se inscrição ok, retornar "Inscrição efetuada com Sucesso", caso contrário "Erro na inscrição, tentar novamente mais tarde".
+
+
+Nas entradas recorrentes, exibir tela com o(s) grupo(s) (já por default no app) e próximos jogos (deve buscar na tabela de jogos).
+
+Para o administrador, exibir uma opção de "Agendar jogo". Ao clicar nessa opção:
+	- exibir calendario/relógio para marcação do dia/horário do jogo.
+	- exibir campo para descrição do jogo.
+	- Chamar a API criação de jogo.  Atenção: enviar data no formato: "YYYY-MM-DD" e horário no formato: "HH:MI", sendo HH de 00 a 23
+
+Para administrador e demais usuários, exibir os jogos marcados.
+	- chamar a API busca de jogos marcados.  ===================https://marketsplash.com/tutorials/node-js/node-js-date/   - continuar aqui...
+	- cada usuário poderá escolher a opção: Aceitar ou Recusar.
+	- chamar a API de definição status Jogo.
+
+Exibir opção "Ver Jogadores", que mostra o status de cada jogador do jogo agendado.
+		Chamar a API consultar Jogo, que exibe o status de cada usuário para essa partida.
+
+Modelo de dados:
+Tabela Grupo deve ter uma chave estrangeira refenciando o Id da tabela Usuario
+Tabela Grupo Usuário deve ter uma chave entrangeira referenciando o Id da tabela Usuario
+Tabela Grupo Usuário deve ter uma chave entrangeira referenciando o Id da tabela Grupo
+Tabela Jogos_Grupo deve ter uma chave entrangeira referenciando o ID da tabela Grupo
+Tabela Jogos_Usuarios deve ter uma chave entrangeira referenciando o ID da tabela Usuario
+Tabela Jogos_Usuarios deve ter uma chave entrangeira referenciando o ID da tabela Jogos_Grupo
+
+
+  

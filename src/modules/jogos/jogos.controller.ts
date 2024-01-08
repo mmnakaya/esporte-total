@@ -10,7 +10,7 @@ import { JogosDto } from './jogos.dto';
 import {JogosService} from './jogos.service';
 
 
-@Controller()
+@Controller('jogos')
 export class JogosController {
 
 constructor(
@@ -18,10 +18,15 @@ constructor(
   ) {}
 
 
-  @Post('jogos')
+  @Post()
   async create(@Body() Data: JogosDto)
   {
     return this.jogosService.create(Data);
+  }
+
+  @Get(':id_grupo' )
+  async findAll(@Param('id_grupo') id_grupo: string){
+    return this.jogosService.findAll(id_grupo);
   }
 
 }

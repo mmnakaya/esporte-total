@@ -3,6 +3,7 @@
 
 generator client {
   provider = "prisma-client-js"
+  previewFeatures = ["fullTextSearch"]
 }
 
 datasource db {
@@ -28,10 +29,13 @@ model Post {
 
 model Grupo {
   id             Int      @default(autoincrement()) @id
-  id_Criador      Int     
+  id_criador      Int     
   nome_grupo     String
   descricao_grupo String
-  data_criacao    String
+  grupo_ref   Usuario @relation(fields:[id_criador],references:[id])
+  data_criacao     DateTime @default(now())
+  grupo_usuarios Grupo_Usuario[]
+  jogos_grupo Jogos_Grupo[]
 }
 
 model Usuario {
@@ -39,24 +43,46 @@ model Usuario {
   nome_usuario     String
   cpf              String?
   email            String
-  codigo_DDD       String
-  numero_Telefone   Int
-  data_criacao     String
+  codigo_ddd       String
+  numero_telefone   Int
+  data_criacao      DateTime @default(now())
+  grupos    Grupo[]
+  grupo_usuarios  Grupo_Usuario[]
+  jogos_usuarios Jogos_Usuarios[]
+
 }
 
-model Jogos   {
+model Jogos_Grupo   {
   id            Int      @default(autoincrement()) @id
   id_grupo      Int
-  id_jogador    Int
   data_jogo     String
   horario_jogo  String
+  timestamp_jogo  DateTime
   descricao_jogo   String?
-  data_criacao    String
+  data_criacao     DateTime @default(now())
+  grupo_ref Grupo @relation(fields:[id_grupo], references:[id])
+  jogos_usuarios  Jogos_Usuarios[]
+ }
+
+model Jogos_Usuarios   {
+  id_jogos_grupo      Int
+  jogos_grupo_ref Jogos_Grupo @relation(fields:[id_jogos_grupo], references:[id])
+  id_usuario          Int
+  usuario_ref         Usuario @relation(fields:[id_usuario], references:[id])
+  confirma_presenca        Boolean @default(false)
+  notas   String
+  data_criacao     DateTime @default(now())
+  
+  @@unique(name: "Jogos_Usuarios_Id",[id_jogos_grupo,id_usuario])
  }
 
  model Grupo_Usuario {
   id_grupo       Int      
   id_usuario     Int
+  grupo_ref   Grupo @relation(fields:[id_grupo], references:[id])
+  usuario_ref   Usuario @relation(fields:[id_usuario], references:[id])
+  eh_administrador  Boolean   @default(false)
   data_criacao   DateTime @default(now())
-  @@unique([id_grupo,id_usuario])
+
+  @@unique(name: "Grupo_Usuario_Id",[id_grupo,id_usuario])
 }

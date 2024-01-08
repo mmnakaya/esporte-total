@@ -1,0 +1,155 @@
+Corrigido
+
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id    Int     @default(autoincrement()) @id
+  email String  @unique
+  name  String?
+  posts Post[]
+}
+
+model Post {
+  id        Int      @default(autoincrement()) @id
+  title     String
+  content   String?
+  published Boolean? @default(false)
+  author    User?    @relation(fields: [authorId], references: [id])
+  authorId  Int?
+}
+
+model Grupo {
+  id             Int      @default(autoincrement()) @id
+  id_criador      Int     
+  nome_grupo     String
+  descricao_grupo String
+  grupo_ref   Usuario @relation(fields:[id_criador],references:[id])
+  data_criacao     DateTime @default(now())
+}
+
+model Usuario {
+  id               Int      @default(autoincrement()) @id
+  nome_usuario     String
+  cpf              String?
+  email            String
+  codigo_ddd       String
+  numero_telefone   Int
+  data_criacao      DateTime @default(now())
+}
+
+model Jogos_Grupo   {
+  id            Int      @default(autoincrement()) @id
+  id_grupo      Int
+  data_jogo     String
+  horario_jogo  String
+  descricao_jogo   String?
+  data_criacao     DateTime @default(now())
+  grupo_ref Grupo @relation(fields:[id_grupo], references:[id])
+ 
+ }
+
+model Jogos_Usuarios   {
+  id_jogos_grupo      Int
+  jogos_grupo_ref Jogos_Grupo @relation(fields:[id_jogos_grupo], references:[id])
+  id_usuario          Int
+  usuario_ref         Usuario @relation(fields:[id_usuario], references:[id])
+  confirma_presenca        Boolean @default(false)
+  notas   Int[]?
+  data_criacao     DateTime @default(now())
+  
+  @@unique(name: "Jogos_Usuarios_Id",[id_jogos_grupo,id_usuario])
+ }
+
+ model Grupo_Usuario {
+  id_grupo       Int      
+  id_usuario     Int
+  grupo_ref   Grupo @relation(fields:[id_grupo], references:[id])
+  usuario_ref   Usuario @relation(fields:[id_usuario], references:[id])
+  eh_administrador  Boolean   @default(false)
+  data_criacao   DateTime @default(now())
+
+  @@unique(name: "Grupo_Usuario_Id",[id_grupo,id_usuario])
+}
+
+
+
+
+Error: Prisma schema validation - (validate wasm)
+Error code: P1012
+error: Field "notas" in model "Jogos_Usuarios" can't be a list. The current connector does not support lists of primitive types.
+  -->  schema.prisma:65
+   | 
+64 |   confirma_presenca        Boolean @default(false)
+65 |   notas   Int[]
+66 |   data_criacao     DateTime @default(now())
+   | 
+error: Error validating field `grupo_ref` in model `Grupo`: The relation field `grupo_ref` on model `Grupo` is missing an opposite relation field on the model `Usuario`. Either run `prisma format` or add it manually.
+  -->  schema.prisma:34
+   | 
+33 |   descricao_grupo String
+34 |   grupo_ref   Usuario @relation(fields:[id_criador],references:[id])
+35 |   data_criacao     DateTime @default(now())
+   | 
+error: Error validating field `grupo_ref` in model `Jogos_Grupo`: The relation field `grupo_ref` on model `Jogos_Grupo` is missing an opposite relation field on the model `Grupo`. Either run `prisma format` or add it manually.
+  -->  schema.prisma:55
+   | 
+54 |   data_criacao     DateTime @default(now())
+55 |   grupo_ref Grupo @relation(fields:[id_grupo], references:[id])
+56 | 
+   | 
+error: Error validating field `jogos_grupo_ref` in model `Jogos_Usuarios`: The relation field `jogos_grupo_ref` on model `Jogos_Usuarios` is missing an opposite relation field on the model `Jogos_Grupo`. Either run `prisma format` or add it manually.
+  -->  schema.prisma:61
+   | 
+60 |   id_jogos_grupo      Int
+61 |   jogos_grupo_ref Jogos_Grupo @relation(fields:[id_jogos_grupo], references:[id])
+62 |   id_usuario          Int
+   | 
+error: Error validating field `usuario_ref` in model `Jogos_Usuarios`: The relation field `usuario_ref` on model `Jogos_Usuarios` is missing an opposite relation field on the model `Usuario`. Either run `prisma format` or add it manually.
+  -->  schema.prisma:63
+   | 
+62 |   id_usuario          Int
+63 |   usuario_ref         Usuario @relation(fields:[id_usuario], references:[id])
+64 |   confirma_presenca        Boolean @default(false)
+   | 
+error: Error validating field `grupo_ref` in model `Grupo_Usuario`: The relation field `grupo_ref` on model `Grupo_Usuario` is missing an opposite relation field on the model `Grupo`. Either run `prisma format` or add it manually.
+  -->  schema.prisma:74
+   | 
+73 |   id_usuario     Int
+74 |   grupo_ref   Grupo @relation(fields:[id_grupo], references:[id])
+75 |   usuario_ref   Usuario @relation(fields:[id_usuario], references:[id])
+   | 
+error: Error validating field `usuario_ref` in model `Grupo_Usuario`: The relation field `usuario_ref` on model `Grupo_Usuario` is missing an opposite relation field on the model `Usuario`. Either run `prisma format` or add it manually.
+  -->  schema.prisma:75
+   | 
+74 |   grupo_ref   Grupo @relation(fields:[id_grupo], references:[id])
+75 |   usuario_ref   Usuario @relation(fields:[id_usuario], references:[id])
+76 |   eh_administrador  Boolean   @default(false)
+   | 
+
+Validation Error Count: 7
+[Context: validate]
+
+Prisma CLI Version : 5.7.1
+PS C:\Users\Keyko\Desktop\Projeto GIT\esporte-total> 
+
+
+
+
+
+
+
+
+
+
+
+

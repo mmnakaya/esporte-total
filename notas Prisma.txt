@@ -10,3 +10,80 @@ Dpois executar o comando abaixo no Visual Studio Code.
 
 npx prisma migrate dev --name init
 
+Para que o search funcione no prisma, precisa anter realizar a seguinte alteração:
+
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["fullTextSearch"]
+}
+- deve-se adicionar o previewFeatures = ["fullTextSearch"] no schema.prisma
+
+depois executar o comando:npx prisma generate
+
+
+
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id    Int     @default(autoincrement()) @id
+  email String  @unique
+  name  String?
+  posts Post[]
+}
+
+model Post {
+  id        Int      @default(autoincrement()) @id
+  title     String
+  content   String?
+  published Boolean? @default(false)
+  author    User?    @relation(fields: [authorId], references: [id])
+  authorId  Int?
+}
+
+model Grupo {
+  id             Int      @default(autoincrement()) @id
+  id_Criador      Int     
+  nome_grupo     String
+  descricao_grupo String
+  data_criacao    String
+}
+
+model Usuario {
+  id               Int      @default(autoincrement()) @id
+  nome_usuario     String
+  cpf              String?
+  email            String
+  codigo_DDD       String
+  numero_Telefone   Int
+  data_criacao     String
+}
+
+model Jogos   {
+  id            Int      @default(autoincrement()) @id
+  id_grupo      Int
+  id_jogador    Int
+  data_jogo     String
+  horario_jogo  String
+  descricao_jogo   String?
+  data_criacao    String
+ }
+
+ model Grupo_Usuario {
+  id_grupo       Int      
+  id_usuario     Int
+  data_criacao   DateTime @default(now())
+  @@unique(name: "grupo_usuarioId",[id_grupo,id_usuario])
+}
+
+Compound IDs or Unique Ids:
+https://www.prisma.io/docs/orm/prisma-client/special-fields-and-types/working-with-composite-ids-and-constraints

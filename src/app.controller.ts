@@ -9,9 +9,9 @@ import {
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { PostService } from './post.service';
-import {GrupoService} from './grupo.service';
+import {GrupoService} from './modules/grupo/grupo.service';
 import { User as UserModel, Post as PostModel } from '@prisma/client';
-import { GrupoDto } from './grupo.dto';
+import { GrupoDto } from './modules/grupo/grupo.dto';
 
 @Controller()
 export class AppController {
