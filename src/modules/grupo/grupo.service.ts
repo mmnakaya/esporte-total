@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { PrismaService } from '../../prisma.service';
 import {GrupoDto} from './grupo.dto'
 
@@ -15,7 +15,9 @@ export class GrupoService {
             }) 
 
             if (grupoExiste) {
-                throw new Error('grupo ja existe')
+                //throw new Error('grupo ja existe')
+                // ex: throw new HttpException(`Erro ao chamar API Coberturas. Status:${res.response.status} statusTexto: ${res.message}`, HttpStatus.BAD_REQUEST)})
+                throw new HttpException(`Erro: grupo já existente`, HttpStatus.BAD_REQUEST)
             }
 
             const grupo = await this.prisma.grupo.create({data})

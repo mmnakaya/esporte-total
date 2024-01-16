@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import {HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import {GrupoUsuarioDto} from './grupo-usuario.dto';
 import { PrismaService } from '../../prisma.service';
 
@@ -22,7 +22,8 @@ export class GrupoUsuarioService {
                 }
             });
             if (!grupo_usuario_existe) {
-                throw new Error('grupo existente') 
+                //throw new Error('grupo existente') 
+                throw new HttpException(`Erro: grupo/usuario já existente`, HttpStatus.BAD_REQUEST)
             }
 
             return await this.prisma.grupo_Usuario.delete({

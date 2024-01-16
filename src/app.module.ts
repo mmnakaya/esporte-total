@@ -1,8 +1,6 @@
 import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
+import { JogosUsuariosModule } from './modules/jogos-usuarios/jogos-usuarios.module';
 import { AppService } from './app.service';
-import { UserService } from './user.service';
-import {PostService} from './post.service';
 import {PrismaService} from './prisma.service';
 import {GrupoService} from './modules/grupo/grupo.service';
 import { JogosService } from './modules/jogos/jogos.service';
@@ -14,9 +12,12 @@ import { UsuariosController } from './modules/usuarios/usuarios.controller';
 import { UsuariosModule } from './modules/usuarios/usuarios.module';
 import { GrupoModule } from './modules/grupo/grupo.module';
 
+
+
+
 @Module({
-  imports: [JogosModule, UsuariosModule, GrupoUsuarioModule,GrupoModule],
-  controllers: [AppController],
-  providers: [AppService, UserService, PrismaService, PostService, GrupoService],
+  imports: [JogosModule, UsuariosModule, GrupoUsuarioModule,GrupoModule,JogosUsuariosModule],
+  controllers: [],
+  providers: [AppService,  PrismaService, GrupoService],
 })
 export class AppModule {}

@@ -7,7 +7,7 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
+  provider = "sqlite"
   url      = env("DATABASE_URL")
 }
 
@@ -48,7 +48,8 @@ model Usuario {
   data_criacao      DateTime @default(now())
   grupos    Grupo[]
   grupo_usuarios  Grupo_Usuario[]
-  
+  jogos_usuarios Jogos_Usuarios[]
+
 }
 
 model Jogos_Grupo   {
@@ -67,6 +68,7 @@ model Jogos_Usuarios   {
   id_jogos_grupo      Int
   jogos_grupo_ref Jogos_Grupo @relation(fields:[id_jogos_grupo], references:[id])
   id_usuario          Int
+  usuario_ref         Usuario @relation(fields:[id_usuario], references:[id])
   confirma_presenca        Boolean @default(false)
   notas   String
   data_criacao     DateTime @default(now())

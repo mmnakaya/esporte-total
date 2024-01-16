@@ -1,8 +1,6 @@
-Primeira Tela do APP
 
-Quando o usuário entrar no APP:
+Na primeira vez que o usuario entrar no APP, pedir para realizar cadastro.
 
-Na primeira vez que entra, pedir para criar o usuário.
 	Exibir campos abaixo pra preenchimento:
 	-nome_usuario
    	-cpf
@@ -11,39 +9,77 @@ Na primeira vez que entra, pedir para criar o usuário.
     	-numero_telefone 
 
 	Chamar API criacao usuario
+		Endpoint: /usuarios (método Post)  Ex body:
+			{
+    			"nome_usuario": "fulano de tal3",
+    			"cpf": "891344234",
+    			"email": "test3@test",
+    			"codigo_ddd": "021",
+    			"numero_telefone": 1498173234    
+ 			}
 
 Após criação do usuário, oferecer ao usuário, as seguinte opções:
 
-	1 - Criar Grupo Novo
+	1 - Criar Grupo Novo  (normalmente só o adm irá entrar nessa opção)
 		Exibir campos abaixo pra preenchimento
 			-nome_grupo     
-  			-descricao_grupo 
+  			-descricao_grupo
+
 		Chamar API criação de Grupo
-		Chamar API criação GrupoUsuario  - preenher campo "eh_administrador" como true (o que irá indicar que o criador do grupo é o adm do mesmo) 
+			EndPoint: /grupo   (método Post) Ex. Body:
+			{
+   			 "id_criador": 1,
+    			"nome_grupo": "KFC",
+    			"descricao_grupo":"jogo semanal GLT"
+			}
+
+			
+		Chamar API criação GrupoUsuario  - preenher campo "eh_administrador" como true (o que irá indicar que o criador do grupo é o adm do mesmo)
+			EndPoint:	/grupoUsuario	(método post)	Ex. Body:
+			{
+    			"id_grupo": 1 ,
+    			"id_usuario": 2,
+    			"eh_administrador": true
+			}
+			Nota: Essa API adiciona usuarios aos membros do grupo. Nesse caso, o Adm torna-se o primeiro membro do grupo. Futuramente, posso chamar essa API na API de criação de grupo.
 
 	2 - Entrar em Grupo Existente
 		Exibir campo para pesquisa do Grupo. Exibir campo para preenchimento do grupo desejado (nome ou parte do nome).
 		Chamar API pesquisa de Grupos. Caso não encontre nenhum grupo, retornar "Grupo não encontrado".
+		Endpoint: /grupo/{nomeGrupo}   (método Get)   Nota: atuamente faz diferenciação entre maiusculo e minusculo, depois eu arrumo isso.
 		
 		Após usuário selecionar o grupo desejado.
 		Chamar a API criação GrupoUsuario
+		EndPoint:	/grupoUsuario	(método Post)   Ver exemplo anterior. Campo "eh_administrador" deve receber "false".
 		Se inscrição ok, retornar "Inscrição efetuada com Sucesso", caso contrário "Erro na inscrição, tentar novamente mais tarde".
 
 
-Nas entradas recorrentes, exibir tela com o(s) grupo(s) (já por default no app) e próximos jogos (deve buscar na tabela de jogos).
+Nas entradas recorrentes, exibir tela com o(s) grupo(s) (já por default no app) e próximos jogos.
 
 Para o administrador, exibir uma opção de "Agendar jogo". Ao clicar nessa opção:
 	- exibir calendario/relógio para marcação do dia/horário do jogo.
 	- exibir campo para descrição do jogo.
 	- Chamar a API criação de jogo.  Atenção: enviar data no formato: "YYYY-MM-DD" e horário no formato: "HH:MI", sendo HH de 00 a 23
+		Endpoint: /jogos	(método Post)  Ex: do Body:
+		
+		 {
+    			"id_grupo": 1,
+    			"data_jogo": "2024-01-16",
+    			"horario_jogo": "18:00",
+    			"descricao_jogo":"futebol no D.Pedro"
+ 		 }
 
-Para administrador e demais usuários, exibir os jogos marcados.
-	- chamar a API busca de jogos marcados.  ===================https://marketsplash.com/tutorials/node-js/node-js-date/   - continuar aqui...
-	- cada usuário poderá escolher a opção: Aceitar ou Recusar.
-	- chamar a API de definição status Jogo.
+Para todos os usuários, exibir os jogos marcados e jogadores da partida.
+	- chamar a API que busca os jogos agendados futuros. 
+			Endpoint: /jogos/{id_grupo}   (método Get)
 
-Exibir opção "Ver Jogadores", que mostra o status de cada jogador do jogo agendado.
-		Chamar a API consultar Jogo, que exibe o status de cada usuário para essa partida.
+	- chamar a API consultar JogoUsuarios, que exibe os jogadores e respectivos status de cada usuário para essa partida.
+		Endpoint: /jogosusuarios/{id_jogo}  (método Get)
+
+	- chamar a API de definição status JogoUsuarios para que cada usuário possa escolher confirmar ou desconfirmar sua presença no jogo:
+		Endpoint: /jogosusuarios/{id_jogo}/{id_usuario}/{confirma_presenca: true ou false}   (método put)
+
+
 
 Modelo de dados:
 Tabela Grupo deve ter uma chave estrangeira refenciando o Id da tabela Usuario
@@ -54,4 +90,27 @@ Tabela Jogos_Usuarios deve ter uma chave entrangeira referenciando o ID da tabel
 Tabela Jogos_Usuarios deve ter uma chave entrangeira referenciando o ID da tabela Jogos_Grupo
 
 
-  
+Notas:
+A data de criação de registros nas tabelas está sendo armazenada como UTC (não é local). Logo, se for exibir precisamos alterar para o horário local.
+Já o horário agendado de jogos está com horário local.
+
+
+Script de Instalação:
+
+- Baixar projeto do Git
+
+- configurar conexoes com banco de dados PostGreSQL
+	https://www.prisma.io/docs/getting-started/setup-prisma/start-from-scratch/relational-databases/connect-your-database-typescript-postgresql
+
+- Criar tabelas no PostGreSQL, executando o comando abaixo:
+	npm install prisma --save-dev
+	npm install @prisma/client
+	npx prisma init
+	npx prisma migrate dev --name init
+
+- swaggers estão em: http://localhost:3000/api
+	
+
+
+
+

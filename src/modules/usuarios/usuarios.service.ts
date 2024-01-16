@@ -22,4 +22,12 @@ export class UsuariosService {
             const usuario = await this.prisma.usuario.create({data})
             return usuario;  
         }
+
+        async delete(id)   {
+            return await this.prisma.usuario.delete({ 
+                where: {
+                    id
+                } 
+            });
+        }
 }

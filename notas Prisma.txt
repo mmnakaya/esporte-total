@@ -20,70 +20,42 @@ generator client {
 
 depois executar o comando:npx prisma generate
 
-
-
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-generator client {
-  provider = "prisma-client-js"
-}
-
-datasource db {
-  provider = "sqlite"
-  url      = env("DATABASE_URL")
-}
-
-model User {
-  id    Int     @default(autoincrement()) @id
-  email String  @unique
-  name  String?
-  posts Post[]
-}
-
-model Post {
-  id        Int      @default(autoincrement()) @id
-  title     String
-  content   String?
-  published Boolean? @default(false)
-  author    User?    @relation(fields: [authorId], references: [id])
-  authorId  Int?
-}
-
-model Grupo {
-  id             Int      @default(autoincrement()) @id
-  id_Criador      Int     
-  nome_grupo     String
-  descricao_grupo String
-  data_criacao    String
-}
-
-model Usuario {
-  id               Int      @default(autoincrement()) @id
-  nome_usuario     String
-  cpf              String?
-  email            String
-  codigo_DDD       String
-  numero_Telefone   Int
-  data_criacao     String
-}
-
-model Jogos   {
-  id            Int      @default(autoincrement()) @id
-  id_grupo      Int
-  id_jogador    Int
-  data_jogo     String
-  horario_jogo  String
-  descricao_jogo   String?
-  data_criacao    String
- }
-
- model Grupo_Usuario {
-  id_grupo       Int      
-  id_usuario     Int
-  data_criacao   DateTime @default(now())
-  @@unique(name: "grupo_usuarioId",[id_grupo,id_usuario])
-}
-
 Compound IDs or Unique Ids:
 https://www.prisma.io/docs/orm/prisma-client/special-fields-and-types/working-with-composite-ids-and-constraints
+
+Para gerar as tabelas novamente, basta apagar todos os arquivos do diretorio Prisma, com exceção do schema.prisma. Depois, executar o comando:
+npx prisma migrate dev --name init
+
+Caso haja problemas de reconhecimento de alterações, apagar o diretório Dist tbm.
+
+
+Datas no prisma:
+• new Date() - creates a Date object representing the current date/time
+
+• Date.now() - returns the number of milliseconds since midnight 01 January, 1970 UTC
+
+As a matter of style, I found it clearer to use Date.now() in code that deals with intervals (usually subtracting an earlier date from a later date to calculate the time elapsed), and new Date() for timestamps, e.g. those written to a database.
+
+para exibir o horário local:
+toLocaleDateString()
+
+UTC - Tempo Universal Coordenado
+
+
+É uma escala de tempo coordenado, mantida pela Agência Internacional de Pesos e Medidas e utilizada como padrão de "hora certa" no controle de tráfego aéreo e serviços 
+de meteorologia aeronáutica. O UTC substitui o GMT (Greenwich Meridian Time) ou Z (Zulu), que é baseado na hora local de Greenwich, Inglaterra. 
+Pode ser considerado equivalente ao GMT sempre que não forem importantes as frações de segundo. O sistema UTC foi desenvolvido pela ITU/UIT em 1970.
+Como não foi possível obter consenso quanto à sigla (CUT em inglês ou TUC em francês), decidiu-se adotar UTC como uma solução de compromisso.
+
+
+https://developer.mozilla.org/pt-BR/docs/Learn/JavaScript/First_steps/Arrays
+
+
+antigo sqlite
+DATABASE_URL="file:./dev.db"
+Se for trocar de provedor de banco de dados seguir as instruções em :
+https://www.prisma.io/docs/orm/prisma-migrate/understanding-prisma-migrate/limitations-and-known-issues#you-cannot-automatically-switch-database-providers
+
+
+Para alterar:
+Verificar como inserir a data e hora no postgree com timezone.
