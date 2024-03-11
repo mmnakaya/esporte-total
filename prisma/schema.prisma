@@ -44,7 +44,7 @@ model Usuario {
   cpf              String?
   email            String
   codigo_ddd       String
-  numero_telefone   Int
+  numero_telefone  String
   data_criacao      DateTime @default(now())
   grupos    Grupo[]
   grupo_usuarios  Grupo_Usuario[]
@@ -61,18 +61,33 @@ model Jogos_Grupo   {
   data_criacao     DateTime @default(now())
   grupo_ref Grupo @relation(fields:[id_grupo], references:[id])
   jogos_usuarios  Jogos_Usuarios[]
+  convidados Convidados[]
  }
 
 model Jogos_Usuarios   {
   id_jogos_grupo      Int
   jogos_grupo_ref Jogos_Grupo @relation(fields:[id_jogos_grupo], references:[id])
   id_usuario          Int
+  status_jogador      String  @default("Permanente")
   confirma_presenca        Boolean @default(false)
   notas   String
   data_criacao     DateTime @default(now())
   
   @@unique(name: "Jogos_Usuarios_Id",[id_jogos_grupo,id_usuario])
  }
+
+ model Convidados   {
+  id_jogos_grupo      Int
+  jogos_grupo_ref Jogos_Grupo @relation(fields:[id_jogos_grupo], references:[id])
+  id_usuario          Int  @default(autoincrement()) @id
+  nome_convidado      String
+  status_jogador      String  @default("Convidado")
+  confirma_presenca        Boolean @default(true)
+  notas   String
+  data_criacao     DateTime @default(now())
+  
+   @@unique(name: "Convidados_Id",[id_jogos_grupo,nome_convidado])
+  }
 
  model Grupo_Usuario {
   id_grupo       Int      

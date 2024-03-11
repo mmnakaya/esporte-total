@@ -8,31 +8,28 @@ export class GrupoUsuarioService {
     constructor(private prisma: PrismaService) {}
   
           async create(data: GrupoUsuarioDto)  {
-              const grupo = await this.prisma.grupo_Usuario.create({data})
-              return grupo;  
+
+              try {
+                const grupo = await this.prisma.grupo_Usuario.create({data})
+                return grupo;
+                 }
+              catch(error) {
+                throw new HttpException(error, HttpStatus.UNPROCESSABLE_ENTITY);
+              }
           }
 
-          async delete(id_grupo:number, id_usuario:number) {
-            const grupo_usuario_existe = await this.prisma.grupo_Usuario.findUnique({
-                where: {
-                    Grupo_Usuario_Id: {
-                    id_grupo:1,
-                    id_usuario:1,
-                    }
-                }
-            });
-            if (!grupo_usuario_existe) {
-                //throw new Error('grupo existente') 
-                throw new HttpException(`Erro: grupo/usuario já existente`, HttpStatus.BAD_REQUEST)
-            }
+          async delete(id_grupo:string, id_usuario:string) {
+                        
+            const id_grupo_number = parseInt(id_grupo);
+            const id_usuario_number = parseInt(id_usuario);
 
-            return await this.prisma.grupo_Usuario.delete({
-                where: {Grupo_Usuario_Id: 
-                            { 
-                            id_grupo:1,
-                            id_usuario:1,  
-                            }
-                        }
-            })
+                      
+            const result = await this.prisma.$queryRaw`delete from esporte."Grupo_Usuario"
+            where id_grupo = ${id_grupo_number}
+            and id_usuario = ${id_usuario_number}`
+
+            return result;
+                    
           }
+          
   }

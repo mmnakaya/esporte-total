@@ -32,16 +32,10 @@ Após criação do usuário, oferecer ao usuário, as seguinte opções:
     			"nome_grupo": "KFC",
     			"descricao_grupo":"jogo semanal GLT"
 			}
+		O grupo é criado na tabela "Grupo".
 
-			
-		Chamar API criação GrupoUsuario  - preenher campo "eh_administrador" como true (o que irá indicar que o criador do grupo é o adm do mesmo)
-			EndPoint:	/grupoUsuario	(método post)	Ex. Body:
-			{
-    			"id_grupo": 1 ,
-    			"id_usuario": 2,
-    			"eh_administrador": true
-			}
-			Nota: Essa API adiciona usuarios aos membros do grupo. Nesse caso, o Adm torna-se o primeiro membro do grupo. Futuramente, posso chamar essa API na API de criação de grupo.
+		Ao criar um grupo, o criador automaticamente se torna o administrador do Grupo e é inserido na tabela "Grupo_Usuario". A lista dos membros de cada grupo ocorre na tabela "Grupo_Usuario". 	
+		
 
 	2 - Entrar em Grupo Existente
 		Exibir campo para pesquisa do Grupo. Exibir campo para preenchimento do grupo desejado (nome ou parte do nome).
@@ -50,13 +44,23 @@ Após criação do usuário, oferecer ao usuário, as seguinte opções:
 		
 		Após usuário selecionar o grupo desejado.
 		Chamar a API criação GrupoUsuario
-		EndPoint:	/grupoUsuario	(método Post)   Ver exemplo anterior. Campo "eh_administrador" deve receber "false".
+		EndPoint:	/grupoUsuario	(método Post)   Campo "eh_administrador" deve receber "false".
+		Ex. Body:
+			{
+    			"id_grupo": 1 ,
+    			"id_usuario": 2,
+    			"eh_administrador": false
+			}
 		Se inscrição ok, retornar "Inscrição efetuada com Sucesso", caso contrário "Erro na inscrição, tentar novamente mais tarde".
+	
+	Para remover um usuário de um determinado Grupo, chamar a API: 
+		EndPoint: /grupoUsuario/{id_grupo}/{id_usuario}   método delete	
 
+	3 - Criação e Gerenciamento de Jogos
 
-Nas entradas recorrentes, exibir tela com o(s) grupo(s) (já por default no app) e próximos jogos.
+	Nas entradas recorrentes, exibir tela com o(s) grupo(s) (já por default no app) e próximos jogos do usuário.
 
-Para o administrador, exibir uma opção de "Agendar jogo". Ao clicar nessa opção:
+	Para o administrador, exibir uma opção de "Agendar jogo". Ao clicar nessa opção:
 	- exibir calendario/relógio para marcação do dia/horário do jogo.
 	- exibir campo para descrição do jogo.
 	- Chamar a API criação de jogo.  Atenção: enviar data no formato: "YYYY-MM-DD" e horário no formato: "HH:MI", sendo HH de 00 a 23
@@ -78,6 +82,25 @@ Para todos os usuários, exibir os jogos marcados e jogadores da partida.
 
 	- chamar a API de definição status JogoUsuarios para que cada usuário possa escolher confirmar ou desconfirmar sua presença no jogo:
 		Endpoint: /jogosusuarios/{id_jogo}/{id_usuario}/{true}   (método put)
+
+Para inserir um convidado, existe o Endpoint abaixo:
+
+Endpoint: /convidado 
+Ex de Body:
+{
+    "id_jogos_grupo": 7,
+    "id_usuario": -5,
+    "nome_convidado": "MarcosNakaya",
+    "notas": "0"
+}
+Em id do usuário pode colocar qquer numero negativo. Precisa ser negativo só para não ficar igual ao da tabela de "Usuarios".
+
+Caso se deseje ver apenas os convidados, chamar o endpoint abaixo:
+Endpoint: /convidado/(id_jogo)
+
+Para desconfirmar um convidado, deve-se apagar o mesmo usando a API abaixo:
+Endpoint:	/convidado/{id_usuario}  método Delete.
+
 
 
 

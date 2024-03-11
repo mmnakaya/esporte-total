@@ -24,4 +24,9 @@ constructor(
     return this.grupoUsuarioService.create(Data);
   }
 
+  @Delete('grupoUsuario/:id_grupo/:id_usuario' )
+  async delete(@Param('id_grupo') id_grupo: string, @Param('id_usuario') id_usuario: string ){
+    return this.grupoUsuarioService.delete(id_grupo, id_usuario);
+  }
+
 }

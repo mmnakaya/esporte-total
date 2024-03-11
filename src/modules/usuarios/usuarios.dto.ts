@@ -31,8 +31,8 @@ export class UsuariosDto {
 
     @ApiProperty({
         description: "Numero do Telefone - enviar no formato NNNNNNNNN  - apenas digitos e sem DDD",
-        example: 999999999,
+        example: "999999999",
     })
     @IsNotEmpty({message:"Num telefone precisa ser preenchido"})
-    numero_telefone: number;
+    numero_telefone: string;
     }

@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import {JogosDto} from './jogos.dto';
 import { PrismaService } from '../../prisma.service';
 import { JogosUsuariosDto } from '../jogos-usuarios/jogos-usuarios.dto';
@@ -14,12 +14,16 @@ export class JogosService {
               
               data.timestamp_jogo = new Date(data.data_jogo + ' ' + data.horario_jogo + ':00 UTC');
               
-              const jogo = await this.prisma.jogos_Grupo.create({data})
-
-              // Após a criação do jogo, inserir todos os jogadores do grupo nesse jogo, o que é feito na tabela Jogos_Usuarios.
-              this.inserir_jogadores(jogo);
-
-              return jogo;  
+              try {
+                const jogo = await this.prisma.jogos_Grupo.create({data}) //Criação do Jogo na tabela Jogos_Grupo
+                this.inserir_jogadores(jogo); //insere todos os jogadores do grupo nesse jogo, o que é feito na tabela Jogos_Usuarios.
+                return jogo;  
+                  }
+               catch(error)
+                  {
+                    throw new HttpException(error, HttpStatus.UNPROCESSABLE_ENTITY);
+                  }
+             
           }
 
           //busca de todos os jogos futuros agendados para o grupo ao qual o usuário pertence.
@@ -60,10 +64,12 @@ export class JogosService {
 
         }  
 
+        // Quando o adm cria um jogo, automaticamente deve-se inserir todos os jogadores do grupo nesse jogo, o que é feito na tabela Jogos_Usuarios.
         async inserir_jogadores(jogo: any) 
         {
-            const id_grupo = jogo.id_grupo
+            const id_jogo = jogo.id
 
+            // primeiramente busca-se todos os jogadores do respectivo Grupo na tabela Grupo_Usuario
             const jogadores_grupo = await this.prisma.grupo_Usuario.findMany({
                 where: {
                         id_grupo: jogo.id_grupo,
@@ -106,7 +112,7 @@ export class JogosService {
                        
             let data: JogosUsuariosDto;          
             for (var i = 0; i < jogadores_grupo.length; i++) {
-                data = {id_jogos_grupo : id_grupo,
+                data = {id_jogos_grupo : id_jogo,
                         id_usuario: jogadores_grupo[i].id_usuario,
                         confirma_presenca: false,
                         notas: '0'}

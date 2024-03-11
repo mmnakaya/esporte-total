@@ -11,12 +11,13 @@ import { UsuariosService } from './modules/usuarios/usuarios.service';
 import { UsuariosController } from './modules/usuarios/usuarios.controller';
 import { UsuariosModule } from './modules/usuarios/usuarios.module';
 import { GrupoModule } from './modules/grupo/grupo.module';
+import { ConvidadoModule } from './modules/convidados/convidados.module';
 
 
 
 
 @Module({
-  imports: [JogosModule, UsuariosModule, GrupoUsuarioModule,GrupoModule,JogosUsuariosModule],
+  imports: [JogosModule, UsuariosModule, GrupoUsuarioModule,GrupoModule,JogosUsuariosModule, ConvidadoModule],
   controllers: [],
   providers: [AppService,  PrismaService, GrupoService],
 })
